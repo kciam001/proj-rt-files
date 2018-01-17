@@ -51,7 +51,7 @@ vec3 Camera::World_Position(const ivec2& pixel_index)
     vec3 yPixel = vertical_vector * cellCenter[1];
 
 
-    result += xPixel - yPixel;
+    result += xPixel + yPixel;
      
 
 
