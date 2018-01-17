@@ -25,6 +25,7 @@ Render_World::~Render_World()
 // Any intersection with t<=small_t should be ignored.
 Object* Render_World::Closest_Intersection(const Ray& ray,Hit& hit)
 {
+
     // TODO
     return 0;
 }
@@ -32,7 +33,7 @@ Object* Render_World::Closest_Intersection(const Ray& ray,Hit& hit)
 // set up the initial view ray and call
 void Render_World::Render_Pixel(const ivec2& pixel_index)
 {
-    vec3 direction(camera.World_Position(pixel_index) - camera.position)
+    vec3 direction(camera.World_Position(pixel_index) - camera.position);
 
     Ray ray(camera.position, direction.normalized()); // TODO: set up the initial view ray here
 
