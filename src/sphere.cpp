@@ -16,15 +16,25 @@ bool Sphere::Intersection(const Ray& ray, std::vector<Hit>& hits) const
 	Hit hit1;
 	Hit hit2;
 
+
 	a = dot(ray.direction, ray.direction);
 	b = dot((ray.direction + ray.direction), (ray.endpoint - center));
-	c = dot(ray.endpoint - center, ray.endpoint - center);
+	c = dot(ray.endpoint - center, ray.endpoint - center) - (radius*radius);
+	discriminant = (b * b) - (4 * a * c);
 
-	discriminant = pow(b, 2) - (4 * a * c);
 
+
+
+	// std::cout<< "a: " << a << " ";
+	// std::cout<< "b: " << b << " ";
+	// std::cout<< "c: " << c << " ";
+	// std::cout<< "d: " << discriminant << " ";
 
 	if(discriminant <= 0)
+	{
+		
 		return false;
+	}
 	else
 	{
 		t1 = ((b * -1) - discriminant) / (2 * a);
