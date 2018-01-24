@@ -10,7 +10,22 @@ bool Plane::
 Intersection(const Ray& ray, std::vector<Hit>& hits) const
 {
     // TODO
-    return false;
+ 	double solution = dot(normal, x1 - ray.endpoint) / dot(normal, ray.direction);
+	Hit hit;
+
+	if(dot(normal, ray.direction) != 0)
+	{
+		if( solution > 0)
+		{
+			hit.object = this;
+			hit.t = solution;
+			hit.ray_exiting = true;
+			hits.push_back(hit);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 vec3 Plane::
