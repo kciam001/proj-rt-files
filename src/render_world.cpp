@@ -38,6 +38,7 @@ Object* Render_World::Closest_Intersection(const Ray& ray,Hit& hit)
         {
             if(hitList.at(j).t < min_t && hitList.at(j).t > small_t)
             {
+
                 closest_object = objects.at(i);
                 hit = hitList.at(j);
                 min_t = hitList.at(j).t;
@@ -85,7 +86,13 @@ vec3 Render_World::Cast_Ray(const Ray& ray,int recursion_depth)
     {
 
         vec3 dummy;
-        color = obj->material_shader->Shade_Surface(ray,dummy,dummy,1,false);
+        vec3 intersectionPoint = ray.Point(intersection.t);
+        vec3 normal = obj->Normal(intersectionPoint);
+
+        if(!intersection.ray_exiting)
+            normal = normal * -1;
+
+        color = obj->material_shader->Shade_Surface(ray,intersectionPoint,normal,1,false);
     }
     else
     {
