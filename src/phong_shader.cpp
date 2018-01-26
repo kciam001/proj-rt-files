@@ -15,10 +15,12 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
     ambient = world.ambient_color * world.ambient_intensity * color_ambient;
 
 
+
+    vec3 light_color = world.lights[0]->Emitted_Light(ray);
     //-------------------------diffuse--------------------------------------
     vec3 diffuse;
     double diffuseI;
-    vec3 light_color = world.lights[0]->Emitted_Light(ray);
+    
 
     //vector from intersection point to the light source
     vec3 L = (world.lights[0]->position - intersection_point);
@@ -33,21 +35,21 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
     diffuse = diffuse / pow(L.magnitude(), 2);
 
     //------------------------specular-----------------------------------
-/*
+
     vec3 specular;
 
-    vec3 reflected = (2 * dot(L.normalized(), same_side_normal.normalized()) * (same_side_normal.normalized() - L.normalized()));
-    double specularIntensity = pow(fmax(dot(reflected.normalized(), (ray.endpoint - intersection_point).normalized()), 0), specular_power);
+    vec3 reflected = (2 * dot(L.normalized(), same_side_normal.normalized()) * same_side_normal.normalized() - L.normalized());
+    double specularI = pow(fmax(dot(reflected.normalized(), (ray.endpoint - intersection_point).normalized()), 0), specular_power);
 
-    specular = (specularIntensity * light_color)/ pow(L.magnitude(), 2);
+    
 
-    // specular = specularI * color_specular * light_color;
-    // specular = specular / pow(L.magnitude(), 2);
-*/
+    specular = specularI * color_specular * light_color;
+    specular = specular / pow(L.magnitude(), 2);
+
 
 
     // TODO: determine the color
 
-    color = diffuse; //+ ambient + specular;
+    color = diffuse + ambient + specular;
     return color;
 }

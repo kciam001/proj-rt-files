@@ -19,7 +19,7 @@ Intersection(const Ray& ray, std::vector<Hit>& hits) const
 		{
 			hit.object = this;
 			hit.t = solution;
-			hit.ray_exiting = true;
+			hit.ray_exiting = false;
 			hits.push_back(hit);
 			return true;
 		}

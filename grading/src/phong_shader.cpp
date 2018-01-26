@@ -37,9 +37,12 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
     vec3 specular;
 
     vec3 reflected = (2 * dot(L.normalized(), same_side_normal.normalized()) * same_side_normal.normalized() - L.normalized());
-    double specularIntensity = pow(fmax(dot(reflected.normalized(), (ray.endpoint- intersection_point).normalized()), 0), specular_power);
+    double specularI = pow(fmax(dot(reflected.normalized(), (ray.endpoint - intersection_point).normalized()), 0), specular_power);
 
-    specular = (specularIntensity * light_color)/ pow(L.magnitude(), 2);
+    
+
+    specular = specularI * color_specular * light_color;
+    specular = specular / pow(L.magnitude(), 2);
 
 
 
