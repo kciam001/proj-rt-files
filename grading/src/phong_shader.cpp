@@ -15,39 +15,45 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
     ambient = world.ambient_color * world.ambient_intensity * color_ambient;
 
 
-    //-------------------------diffuse--------------------------------------
-    vec3 diffuse;
-    double diffuseI;
-    vec3 light_color = world.lights[0]->Emitted_Light(ray);
+    for(unsigned i = 0; i < world.lights.size(); i++)
+    {
+	    vec3 light_color = world.lights[i]->Emitted_Light(ray);
+	    //-------------------------diffuse--------------------------------------
+	    vec3 diffuse;
+	    double diffuseI;
+	    
 
-    //vector from intersection point to the light source
-    vec3 L = (world.lights[0]->position - intersection_point);
-    //dot(n,l) = costheta
-	diffuseI = std::max(dot(L.normalized(), same_side_normal.normalized()), 0.0);
-	//decay proportional to square distance between intersection point and light source
+	    //vector from intersection point to the light source
+	    vec3 L = (world.lights[i]->position - intersection_point);
+	    //dot(n,l) = costheta
+		diffuseI = std::max(dot(L.normalized(), same_side_normal.normalized()), 0.0);
+		//decay proportional to square distance between intersection point and light source
 
-	//Ray lightRay(world.lights[0]->position, L);
+		//Ray lightRay(world.lights[0]->position, L);
 
-    diffuse = diffuseI * color_diffuse * light_color;
+	    diffuse = diffuseI * color_diffuse * light_color;
 
-    diffuse = diffuse / pow(L.magnitude(), 2);
+	    diffuse = diffuse / pow(L.magnitude(), 2);
 
-    //------------------------specular-----------------------------------
+	    //------------------------specular-----------------------------------
 
-    vec3 specular;
+	    vec3 specular;
 
-    vec3 reflected = (2 * dot(L.normalized(), same_side_normal.normalized()) * same_side_normal.normalized() - L.normalized());
-    double specularI = pow(fmax(dot(reflected.normalized(), (ray.endpoint - intersection_point).normalized()), 0), specular_power);
+	    vec3 reflected = (2 * dot(L.normalized(), same_side_normal.normalized()) * same_side_normal.normalized() - L.normalized());
+	    double specularI = pow(fmax(dot(reflected.normalized(), (ray.endpoint - intersection_point).normalized()), 0), specular_power);
 
-    
+	    
 
-    specular = specularI * color_specular * light_color;
-    specular = specular / pow(L.magnitude(), 2);
+	    specular = specularI * color_specular * light_color;
+	    specular = specular / pow(L.magnitude(), 2);
 
 
 
-    // TODO: determine the color
+	    // TODO: determine the color
 
-    color = diffuse + ambient + specular;
+	    color += diffuse + specular;
+	}
+
+	color += ambient;
     return color;
 }
