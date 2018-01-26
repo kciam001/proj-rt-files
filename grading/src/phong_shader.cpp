@@ -10,50 +10,100 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
 {
     vec3 color;
     vec3 ambient;
+    vec3 light_position;
 
-    //------------------------ambient---------------------------------
+    //------------------------ambient----------------------------------------------------
     ambient = world.ambient_color * world.ambient_intensity * color_ambient;
+	color += ambient;
+    //------------------------shadows----------------------------------------------------
 
+ //    if(world.enable_shadows)
+	// {
+	// 	//std::cout << world.lights.size();
+
+	// 	for(unsigned i = 0; i < world.lights.size(); i++)
+	// 	{
+	// 		light_position = world.lights[i]->position;
+	// 		Ray lightRay(intersection_point, light_position-intersection_point);
+	// 		Hit hit;
+
+	// 		if(world.Closest_Intersection(lightRay, hit) != NULL)
+	// 		{
+	// 			//std::cout << "TEST C";
+	// 			numObstructions++;
+	// 		}
+	// 		else
+	// 		{
+	// 			//std::cout << "TEST A ";
+	// 		}
+	// 	}
+
+	// 	if(numObstructions == world.lights.size())
+	// 	{
+	// 		//std::cout << "TEST B";
+	// 		return ambient;
+	// 	}
+
+	// }
+
+	//--------------------------------------------------------------------------
 
     for(unsigned i = 0; i < world.lights.size(); i++)
     {
 	    vec3 light_color = world.lights[i]->Emitted_Light(ray);
-	    //-------------------------diffuse--------------------------------------
-	    vec3 diffuse;
-	    double diffuseI;
-	    
+	    light_position = world.lights[i]->position;
+	    bool shadowFlag = false;
 
-	    //vector from intersection point to the light source
-	    vec3 L = (world.lights[i]->position - intersection_point);
-	    //dot(n,l) = costheta
-		diffuseI = std::max(dot(L.normalized(), same_side_normal.normalized()), 0.0);
-		//decay proportional to square distance between intersection point and light source
+	    if(world.enable_shadows)
+	    {
+	    	Ray lightRay(intersection_point, light_position-intersection_point);
+	    	Hit hit;
 
-		//Ray lightRay(world.lights[0]->position, L);
+	    	if(world.Closest_Intersection(lightRay, hit) != NULL)
+	    	{
+	    		shadowFlag = true;
+	    	}
+	    }
 
-	    diffuse = diffuseI * color_diffuse * light_color;
+	    if(!shadowFlag)
+	    {
 
-	    diffuse = diffuse / pow(L.magnitude(), 2);
+		    //-------------------------diffuse--------------------------------------
+		    vec3 diffuse;
+		    double diffuseI;
+		    
 
-	    //------------------------specular-----------------------------------
+		    //vector from intersection point to the light source
+		    vec3 L = (light_position - intersection_point);
+		    //dot(n,l) = costheta
+			diffuseI = std::max(dot(L.normalized(), same_side_normal.normalized()), 0.0);
+			//decay proportional to square distance between intersection point and light source
 
-	    vec3 specular;
+			//Ray lightRay(world.lights[0]->position, L);
 
-	    vec3 reflected = (2 * dot(L.normalized(), same_side_normal.normalized()) * same_side_normal.normalized() - L.normalized());
-	    double specularI = pow(fmax(dot(reflected.normalized(), (ray.endpoint - intersection_point).normalized()), 0), specular_power);
+		    diffuse = diffuseI * color_diffuse * light_color;
 
-	    
+		    diffuse = diffuse / pow(L.magnitude(), 2);
 
-	    specular = specularI * color_specular * light_color;
-	    specular = specular / pow(L.magnitude(), 2);
+		    //------------------------specular--------------------------------------
+
+		    vec3 specular;
+
+		    vec3 reflected = (2 * dot(L.normalized(), same_side_normal.normalized()) * same_side_normal.normalized() - L.normalized());
+		    double specularI = pow(fmax(dot(reflected.normalized(), (ray.endpoint - intersection_point).normalized()), 0), specular_power);
+
+		    
+
+		    specular = specularI * color_specular * light_color;
+		    specular = specular / pow(L.magnitude(), 2);
 
 
+		    // TODO: determine the color
 
-	    // TODO: determine the color
+		    color += diffuse + specular;
+		}
 
-	    color += diffuse + specular;
 	}
 
-	color += ambient;
     return color;
 }

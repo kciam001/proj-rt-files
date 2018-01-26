@@ -27,7 +27,7 @@ Object* Render_World::Closest_Intersection(const Ray& ray,Hit& hit)
 {
     // TODO
     double min_t = std::numeric_limits<float>::max();
-    Object * closest_object;
+    Object * closest_object = NULL;
     std::vector<Hit> hitList;
 
     for (unsigned i = 0; i < objects.size(); i++)
@@ -47,13 +47,7 @@ Object* Render_World::Closest_Intersection(const Ray& ray,Hit& hit)
         }
     }
     
-    if(hitList.empty())
-    {
-
-        return NULL;
-    }
-    else
-        return closest_object;
+    return closest_object;
 }
 
 // set up the initial view ray and call
