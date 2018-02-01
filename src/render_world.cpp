@@ -46,7 +46,7 @@ Object* Render_World::Closest_Intersection(const Ray& ray,Hit& hit)
 
         }
     }
-    
+
     return closest_object;
 }
 
@@ -76,10 +76,15 @@ vec3 Render_World::Cast_Ray(const Ray& ray,int recursion_depth)
     Hit intersection;
     Object* obj = Closest_Intersection(ray, intersection);
     vec3 color;
-    if(obj != NULL)
+    vec3 dummy;
+
+    if(recursion_depth > recursion_depth_limit)
+    {
+        color = background_shader->Shade_Surface(ray,dummy,dummy,1,false);
+    }
+    else if(obj != NULL)
     {
 
-        vec3 dummy;
         vec3 intersectionPoint = ray.Point(intersection.t);
         vec3 normal = obj->Normal(intersectionPoint);
 
@@ -92,8 +97,6 @@ vec3 Render_World::Cast_Ray(const Ray& ray,int recursion_depth)
     }
     else
     {
-
-        vec3 dummy;
         color = background_shader->Shade_Surface(ray,dummy,dummy,1,false);
     }
 
