@@ -82,7 +82,7 @@ vec3 Render_World::Cast_Ray(const Ray& ray,int recursion_depth)
 
     if(obj != NULL)
     {
-        if(recursion_depth > recursion_depth_limit)
+        if(recursion_depth > recursion_depth_max)
         {
             color = background_shader->Shade_Surface(ray,dummy,dummy,1,false);
         }

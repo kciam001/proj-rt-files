@@ -107,6 +107,7 @@ for line in gs.readlines():
         if not run_command_with_timeout(grade_cmd, timeout):
             hashed_tests[file]=("TIMEOUT",None)
         else:
+<<<<<<< HEAD
             d=False
             try:
               results_file=open(dir+'/'+token+'.txt')
@@ -117,6 +118,12 @@ for line in gs.readlines():
             except IOError:
               # print 'Test failed'
               d="CRASH"
+=======
+            results_file=open(dir+'/'+token+'.txt')
+            d=diff_parse.match(results_file.readline())
+            results_file.close()
+            if d: d=float(d.groups()[0])
+>>>>>>> parent of a42f47c... Fixed bug for test 21
             hashed_tests[file]=d
 
     d=hashed_tests[file]

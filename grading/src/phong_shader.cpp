@@ -45,7 +45,7 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
 	// 	}
 
 	// }
-//if length of that ray to object > length of ray to light then the object is not blocking the light => no shado 
+
 	//--------------------------------------------------------------------------
 
     for(unsigned i = 0; i < world.lights.size(); i++)
@@ -59,14 +59,10 @@ Shade_Surface(const Ray& ray,const vec3& intersection_point,
 	    	Ray lightRay(intersection_point, light_position-intersection_point);
 	    	Hit hit;
 
-		    	if(world.Closest_Intersection(lightRay, hit) != NULL)
-		    	{
-		    		if(hit.t < (light_position-intersection_point).magnitude())
-	    			{
-	    				shadowFlag = true;
-	    			}
-		    		
-		    	}
+	    	if(world.Closest_Intersection(lightRay, hit) != NULL)
+	    	{
+	    		shadowFlag = true;
+	    	}
 	    }
 
 	    if(!shadowFlag)
